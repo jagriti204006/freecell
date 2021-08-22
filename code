@@ -1,0 +1,157 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.lang.Thread;
+// import jdk.internal.org.jline.terminal.MouseEvent;
+
+
+public class myPro extends Frame{
+    Thread t;
+    String myString = "ENTER MOUSE TO START GAME" ;
+    boolean flag=false;
+    int eyeSideX = 0, eyeSideY = 0;
+    int mouseX = 0, mouseY = 0;
+    double distance;
+    double mouseSpeed;
+    int count = 0;
+    boolean mouseFast = false;
+
+    myPro(){
+        addMouseListener(new MouseAdapter(){
+            // public void mouseExited(MouseEvent me){
+            //     System.exit(0);
+            // }
+
+            public void mouseEntered(MouseEvent me){
+                myString = "";
+                flag = true;
+                repaint();
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter(){
+            public void mouseMoved(MouseEvent me){
+                // myString = "coordinates: "+me.getX()+", "+me.getY();
+                // repaint(me.getX(), 0, 0, 0);
+                eyeSideX = me.getX();
+                eyeSideY = me.getY();
+                distance = Math.sqrt(Math.pow(eyeSideX - mouseX, 2) + Math.pow(eyeSideY - mouseY, 2));
+                count++;                
+                mouseX = eyeSideX;
+                mouseY = eyeSideY;
+                mouseSpeed = distance/count;
+                if(mouseSpeed > 0.05){
+                    mouseFast = true;
+                }
+                else{
+                    mouseFast = false;
+                }
+                // myString = "Speed is: " + mouseSpeed;
+                repaint();
+            }
+
+        });
+        addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent we){
+                System.exit(0);
+            }
+        });
+    }
+
+    
+    public void paint( Graphics g){
+        // String list[] = {"RED", "BLUE", "YELLOW", "GREEN", "BLACK", "PINK", "ORANGE"};
+        // int count = 0;
+        // for(int i = 0; i<list.length; i++){
+        //     String color = list[i];
+        //     g.setColor(Color.&color);
+        //     g.drawString(myString, 150, 245);
+        //     count++;
+        // }
+
+        g.setColor(Color.GREEN);
+        // g.drawString(myString, 100, 100);
+        g.drawString(myString, 150, 245);
+        
+        if(flag){
+            // drawing the body of snake 
+            g.setColor(Color.GREEN);
+            g.fillRoundRect(205, 180, 90, 500, 49, 60);
+            
+            if(eyeSideX > 250){
+                g.setColor(Color.WHITE);
+                g.fillOval(216, 200, 25, 25);
+                g.fillOval(260, 200, 25, 25);
+
+                if(eyeSideY <= 250 && eyeSideY >= 190){
+                    g.setColor(Color.BLACK);
+                    g.fillOval(228, 206, 13, 13);
+                    g.fillOval(272, 206, 13, 13);
+
+                }
+                else if(eyeSideY < 190){
+                    g.setColor(Color.BLACK);
+                    g.fillOval(224, 200, 13, 13);
+                    g.fillOval(268, 200, 13, 13);
+                }
+                else if(eyeSideY > 250){
+                    g.setColor(Color.BLACK);
+                    g.fillOval(224, 212, 13, 13);
+                    g.fillOval(268, 212, 13, 13);
+                }            
+            }
+
+            else{
+            // drawing the eyes
+                g.setColor(Color.WHITE);
+                g.fillOval(216, 200, 25, 25);
+                g.fillOval(260, 200, 25, 25);
+            if(eyeSideY <= 250 && eyeSideY >= 190){
+                g.setColor(Color.BLACK);
+                g.fillOval(216, 206, 13, 13);
+                g.fillOval(260, 206, 13, 13);
+
+            }
+            else if(eyeSideY < 190){
+                g.setColor(Color.BLACK);
+                g.fillOval(220, 200, 13, 13);
+                g.fillOval(264, 200, 13, 13);
+            }
+            else if(eyeSideY > 250){
+                g.setColor(Color.BLACK);
+                g.fillOval(220, 212, 13, 13);
+                g.fillOval(264, 212, 13, 13);
+            }            
+            }
+            
+        }
+        if (mouseFast){
+            this.setBackground(Color.MAGENTA);
+            // try{
+            //     Thread.sleep(150);
+            //     this.setBackground(Color.BLACK);
+            //     Thread.sleep(150);
+            //     this.setBackground(Color.MAGENTA);
+            //     Thread.sleep(150);
+            //     this.setBackground(Color.ORANGE);
+            // }
+            // catch(InterruptedException ie){
+            //     System.exit(0);
+            // }
+        }
+        if(!mouseFast){
+            this.setBackground(Color.pink);
+        }
+        // g.setColor(Color.BLACK);
+        // g.drawString(myString, 200, 200);
+    }
+
+    public static void main(String[] args){
+        myPro mp = new myPro();
+        mp.setSize(500,500);
+        // mp.setDefaultCloseOperation(myPro.EXIT_ON_CLOSE);
+        // mp.setShape(Rectangle);
+        mp.setBackground(Color.pink);
+        mp.setTitle("SnakeGame");
+        mp.setVisible(true);
+    }
+    
+}
